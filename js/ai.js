@@ -79,7 +79,7 @@ Make it creative, romantic, and themed around ${selectedTheme}. Ensure all instr
     }
 
     async callGemini(apiKey, prompt) {
-        const response = await fetch(`${this.providers.gemini.endpoint}?key=${apiKey}`, {
+    const response = await fetch(`${this.providers.gemini.endpoint}?key=${apiKey}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -100,13 +100,16 @@ Make it creative, romantic, and themed around ${selectedTheme}. Ensure all instr
         });
 
         if (!response.ok) {
-            const error = await response.text();
-            throw new Error(`Gemini API error: ${response.status} - ${error}`);
+            const errorText = await response.text();
+            let friendly = `Gemini API error: ${response.status}`;
+            if (response.status === 401 || response.status === 403) friendly += ' (unauthorized)';
+            if (response.status === 429) friendly += ' (rate limit)';
+            throw new Error(`${friendly} - ${errorText}`);
         }
 
         const data = await response.json();
         
-        if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
             throw new Error('Invalid response from Gemini API');
         }
 
@@ -133,13 +136,16 @@ Make it creative, romantic, and themed around ${selectedTheme}. Ensure all instr
         });
 
         if (!response.ok) {
-            const error = await response.text();
-            throw new Error(`Hugging Face API error: ${response.status} - ${error}`);
+            const errorText = await response.text();
+            let friendly = `Hugging Face API error: ${response.status}`;
+            if (response.status === 401 || response.status === 403) friendly += ' (unauthorized)';
+            if (response.status === 429) friendly += ' (rate limit)';
+            throw new Error(`${friendly} - ${errorText}`);
         }
 
         const data = await response.json();
         
-        if (!data || !data[0] || !data[0].generated_text) {
+    if (!data || !data[0] || !data[0].generated_text) {
             throw new Error('Invalid response from Hugging Face API');
         }
 

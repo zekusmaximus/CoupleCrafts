@@ -11,6 +11,21 @@ function app() {
         aiEnabled: false,
         aiProvider: 'gemini',
         apiKey: '',
+
+        // Filters
+        currentCategory: '',
+        showFavoritesOnly: false,
+        categories: [
+            '',
+            'speculative fiction',
+            'romantic bonding',
+            'creative expression',
+            'culinary adventure',
+            'storytelling',
+            'artistic creation',
+            'mindful connection',
+            'playful games'
+        ],
         
         // Current activity
         currentActivity: {
@@ -24,7 +39,8 @@ function app() {
         },
         
         // Activities data
-        activities: [],
+        activities: [], // filtered list for display
+        allActivities: [], // unfiltered master list
         fallbackActivities: [],
         currentActivityIndex: 0,
         
@@ -34,7 +50,8 @@ function app() {
             title: '',
             hisNotes: '',
             herNotes: '',
-            photo: null
+            photo: null,
+            photoPreview: null
         },
         
         // Photo modal
@@ -60,11 +77,13 @@ function app() {
                 await this.loadActivities();
                 await this.loadHistory();
                 
-                // Set initial activity
+                // Set initial activity from filtered list or fallback
                 if (this.activities.length > 0) {
                     this.currentActivity = this.activities[0];
+                    this.currentActivityIndex = 0;
                 } else if (this.fallbackActivities.length > 0) {
                     this.currentActivity = this.fallbackActivities[0];
+                    this.currentActivityIndex = 0;
                 }
                 
                 console.log('App initialized successfully');
@@ -99,6 +118,25 @@ function app() {
             }
         },
 
+        // Explicit save + test action to avoid testing on every keystroke
+        async saveSettingsAndTest() {
+            try {
+                await this.saveSettings();
+                if (this.aiEnabled && this.apiKey) {
+                    const testResult = await window.aiService.testConnection(this.aiProvider, this.apiKey);
+                    if (!testResult.success) throw new Error(testResult.message);
+                    alert('API connection successful!');
+                } else if (this.aiEnabled && !this.apiKey) {
+                    alert('Enter an API key to test the connection.');
+                } else {
+                    alert('Settings saved. AI generation is disabled.');
+                }
+            } catch (error) {
+                console.error('Failed to save settings:', error);
+                alert(`Settings save failed: ${error.message}`);
+            }
+        },
+
         // Activity management
         async loadFallbackActivities() {
             try {
@@ -124,12 +162,33 @@ function app() {
             try {
                 const savedActivities = await window.coupleCraftsDB.getActivities();
                 const userActivities = await window.coupleCraftsDB.getUserActivities();
-                this.activities = [...savedActivities, ...userActivities, ...this.fallbackActivities];
-                console.log(`Loaded ${this.activities.length} total activities`);
+                this.allActivities = [...savedActivities, ...userActivities, ...this.fallbackActivities];
+                this.applyFilters();
+                console.log(`Loaded ${this.allActivities.length} total activities`);
             } catch (error) {
                 console.error('Failed to load activities:', error);
-                this.activities = [...this.fallbackActivities];
+                this.allActivities = [...this.fallbackActivities];
+                this.applyFilters();
+                alert('Failed to load saved activities. Showing fallback list.');
             }
+        },
+
+        applyFilters() {
+            const category = (this.currentCategory || '').toLowerCase();
+            this.activities = this.allActivities.filter(a => {
+                const matchesCategory = !category || (a.category || '').toLowerCase() === category;
+                const matchesFavorite = !this.showFavoritesOnly || !!a.isFavorite;
+                return matchesCategory && matchesFavorite;
+            });
+            // Reset index and current activity if needed
+            if (this.activities.length > 0) {
+                this.currentActivityIndex = 0;
+                this.currentActivity = this.activities[0];
+            }
+        },
+
+        filterActivities() {
+            this.applyFilters();
         },
 
         async getNewActivity() {
@@ -155,12 +214,20 @@ function app() {
                 this.currentActivity = activity;
                 
                 // Add to activities list
-                this.activities.unshift(activity);
+                this.allActivities.unshift(activity);
+                this.applyFilters();
                 
                 console.log('Generated new AI activity:', activity.title);
             } catch (error) {
                 console.error('AI generation failed:', error);
-                alert('Failed to generate AI activity. Using fallback activity instead.');
+                const msg = (error && error.message) ? error.message : '';
+                if (/401|403/i.test(msg)) {
+                    alert('AI request failed: Invalid API key or insufficient permissions. Check your key and provider.');
+                } else if (/429|rate|quota/i.test(msg)) {
+                    alert('AI request failed: Rate limit or quota exceeded. Please try again later.');
+                } else {
+                    alert('Failed to generate AI activity. Using fallback activity instead.');
+                }
                 this.getRandomFallbackActivity();
             } finally {
                 this.loading = false;
@@ -250,13 +317,15 @@ function app() {
             } catch (error) {
                 console.error('Failed to load history:', error);
                 this.activityHistory = [];
+                alert('Failed to load history.');
             }
         },
 
-        async handlePhotoUpload(event) {
+    async handlePhotoUpload(event) {
             const file = event.target.files[0];
             if (file && file.type.startsWith('image/')) {
-                this.newEntry.photo = file;
+        this.newEntry.photo = file;
+        this.newEntry.photoPreview = URL.createObjectURL(file);
             }
         },
 
@@ -294,11 +363,13 @@ function app() {
                     title: '',
                     hisNotes: '',
                     herNotes: '',
-                    photo: null
+                    photo: null,
+                    photoPreview: null
                 };
                 this.showAddEntry = false;
 
                 console.log('Activity entry saved successfully');
+                alert('Activity saved successfully!');
             } catch (error) {
                 console.error('Failed to save entry:', error);
                 alert('Failed to save activity entry');

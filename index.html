@@ -76,6 +76,7 @@
                         </select>
                         <input x-model="apiKey" type="password" placeholder="API Key" 
                                class="w-full p-2 rounded bg-gray-700 text-white placeholder-gray-400">
+                        <button @click="saveSettingsAndTest()" class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">Save & Test</button>
                     </div>
                 </div>
             </div>
@@ -99,6 +100,21 @@
 
             <!-- Activities Tab -->
             <div x-show="activeTab === 'activities'" class="space-y-6">
+                <!-- Filters -->
+                <div class="bg-gray-800 rounded-lg p-4 flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-3 sm:space-y-0">
+                    <div class="flex-1">
+                        <label class="block text-sm mb-1">Category</label>
+                        <select x-model="currentCategory" @change="filterActivities()" class="w-full p-2 rounded bg-gray-700 text-white">
+                            <template x-for="cat in categories" :key="cat">
+                                <option :value="cat" x-text="cat || 'All Categories'"></option>
+                            </template>
+                        </select>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input id="favOnly" type="checkbox" x-model="showFavoritesOnly" @change="filterActivities()" class="rounded bg-gray-700">
+                        <label for="favOnly" class="text-sm">Show favorites only</label>
+                    </div>
+                </div>
                 <!-- Activity Card -->
                 <div class="bg-gray-800 rounded-lg p-6 shadow-lg">
                     <div class="flex items-center justify-between mb-4">
@@ -196,6 +212,7 @@
                               class="w-full p-2 rounded bg-gray-700 text-white placeholder-gray-400 h-20"></textarea>
                     <input type="file" @change="handlePhotoUpload($event)" accept="image/*" 
                            class="w-full p-2 rounded bg-gray-700 text-white">
+                    <img :src="newEntry.photoPreview" x-show="newEntry.photoPreview" class="max-h-32 rounded">
                     <div class="flex space-x-2">
                         <button @click="saveEntry()" 
                                 class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded">
