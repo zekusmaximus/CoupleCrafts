@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoupleCrafts</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="AI-powered at-home activity prompts for couples">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Apple PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="CoupleCrafts">
+    <link rel="apple-touch-icon" href="/images/icon-192.png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#8b5cf6'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <div id="app" x-data="app()" class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="bg-gray-800 shadow-lg">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <h1 class="text-xl font-bold text-primary">CoupleCrafts</h1>
+                    <button @click="showSettings = !showSettings" class="p-2 rounded-lg hover:bg-gray-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Settings Panel -->
+        <div x-show="showSettings" x-transition class="bg-gray-800 border-b border-gray-700 p-4">
+            <div class="container mx-auto">
+                <h3 class="text-lg font-semibold mb-3">Settings</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm">AI Generation</label>
+                        <button @click="aiEnabled = !aiEnabled" 
+                                :class="aiEnabled ? 'bg-primary' : 'bg-gray-600'"
+                                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                            <span :class="aiEnabled ? 'translate-x-6' : 'translate-x-1'"
+                                  class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"></span>
+                        </button>
+                    </div>
+                    <div x-show="aiEnabled" class="space-y-2">
+                        <label class="text-sm">AI Provider</label>
+                        <select x-model="aiProvider" class="w-full p-2 rounded bg-gray-700 text-white">
+                            <option value="gemini">Google AI Studio (Gemini)</option>
+                            <option value="huggingface">Hugging Face (Mistral-7B)</option>
+                        </select>
+                        <input x-model="apiKey" type="password" placeholder="API Key" 
+                               class="w-full p-2 rounded bg-gray-700 text-white placeholder-gray-400">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="flex-1 container mx-auto px-4 py-6">
+            <!-- Tab Navigation -->
+            <nav class="flex space-x-1 bg-gray-800 rounded-lg p-1 mb-6">
+                <button @click="activeTab = 'activities'" 
+                        :class="activeTab === 'activities' ? 'bg-primary text-white' : 'text-gray-400 hover:text-white'"
+                        class="flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors">
+                    Activities
+                </button>
+                <button @click="activeTab = 'history'" 
+                        :class="activeTab === 'history' ? 'bg-primary text-white' : 'text-gray-400 hover:text-white'"
+                        class="flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors">
+                    Our History
+                </button>
+            </nav>
+
+            <!-- Activities Tab -->
+            <div x-show="activeTab === 'activities'" class="space-y-6">
+                <!-- Activity Card -->
+                <div class="bg-gray-800 rounded-lg p-6 shadow-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold" x-text="currentActivity.title">Loading...</h2>
+                        <div class="flex space-x-2">
+                            <button @click="toggleFavorite()" 
+                                    :class="currentActivity.isFavorite ? 'text-red-500' : 'text-gray-400'"
+                                    class="p-2 hover:bg-gray-700 rounded">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"></path>
+                                </svg>
+                            </button>
+                            <button @click="getNewActivity()" class="p-2 hover:bg-gray-700 rounded text-primary">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <p class="text-gray-300" x-text="currentActivity.description">Select an activity to get started!</p>
+                        
+                        <div x-show="currentActivity.instructions" class="space-y-2">
+                            <h3 class="font-semibold text-primary">Instructions:</h3>
+                            <ol class="list-decimal list-inside space-y-1 text-sm text-gray-300">
+                                <template x-for="instruction in currentActivity.instructions">
+                                    <li x-text="instruction"></li>
+                                </template>
+                            </ol>
+                        </div>
+                        
+                        <div x-show="currentActivity.supplies" class="space-y-2">
+                            <h3 class="font-semibold text-primary">Supplies Needed:</h3>
+                            <ul class="list-disc list-inside space-y-1 text-sm text-gray-300">
+                                <template x-for="supply in currentActivity.supplies">
+                                    <li x-text="supply"></li>
+                                </template>
+                            </ul>
+                        </div>
+                        
+                        <div x-show="currentActivity.cost" class="flex items-center space-x-2">
+                            <span class="text-sm font-semibold text-primary">Estimated Cost:</span>
+                            <span class="text-sm text-gray-300" x-text="currentActivity.cost"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex space-x-3">
+                        <button @click="startActivity()" 
+                                class="flex-1 bg-primary hover:bg-blue-600 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+                            Start Activity
+                        </button>
+                        <button @click="rateActivity()" 
+                                class="px-4 py-2 border border-gray-600 hover:border-gray-500 rounded-lg transition-colors">
+                            Rate
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Swipe Navigation -->
+                <div class="flex justify-center space-x-4">
+                    <button @click="previousActivity()" 
+                            class="p-3 bg-gray-800 hover:bg-gray-700 rounded-full transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </button>
+                    <button @click="nextActivity()" 
+                            class="p-3 bg-gray-800 hover:bg-gray-700 rounded-full transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div x-show="activeTab === 'history'" class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-semibold">Our Activity History</h2>
+                    <button @click="showAddEntry = !showAddEntry" 
+                            class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">
+                        Add Entry
+                    </button>
+                </div>
+
+                <!-- Add Entry Form -->
+                <div x-show="showAddEntry" x-transition class="bg-gray-800 rounded-lg p-4 space-y-4">
+                    <h3 class="font-semibold">Add Activity Entry</h3>
+                    <input x-model="newEntry.title" placeholder="Activity Title" 
+                           class="w-full p-2 rounded bg-gray-700 text-white placeholder-gray-400">
+                    <textarea x-model="newEntry.hisNotes" placeholder="His Notes" 
+                              class="w-full p-2 rounded bg-gray-700 text-white placeholder-gray-400 h-20"></textarea>
+                    <textarea x-model="newEntry.herNotes" placeholder="Her Notes" 
+                              class="w-full p-2 rounded bg-gray-700 text-white placeholder-gray-400 h-20"></textarea>
+                    <input type="file" @change="handlePhotoUpload($event)" accept="image/*" 
+                           class="w-full p-2 rounded bg-gray-700 text-white">
+                    <div class="flex space-x-2">
+                        <button @click="saveEntry()" 
+                                class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded">
+                            Save
+                        </button>
+                        <button @click="showAddEntry = false" 
+                                class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+
+                <!-- History Timeline -->
+                <div class="space-y-4">
+                    <template x-for="entry in activityHistory" :key="entry.id">
+                        <div class="bg-gray-800 rounded-lg p-4">
+                            <div class="flex items-start space-x-4">
+                                <img x-show="entry.photo" :src="entry.photo" 
+                                     class="w-16 h-16 rounded-lg object-cover cursor-pointer"
+                                     @click="showPhotoModal(entry.photo)">
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h3 class="font-semibold" x-text="entry.title"></h3>
+                                        <span class="text-sm text-gray-400" x-text="formatDate(entry.date)"></span>
+                                    </div>
+                                    <div class="space-y-2 text-sm">
+                                        <div x-show="entry.hisNotes">
+                                            <span class="font-medium text-blue-400">His Notes:</span>
+                                            <p class="text-gray-300" x-text="entry.hisNotes"></p>
+                                        </div>
+                                        <div x-show="entry.herNotes">
+                                            <span class="font-medium text-pink-400">Her Notes:</span>
+                                            <p class="text-gray-300" x-text="entry.herNotes"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    
+                    <div x-show="activityHistory.length === 0" class="text-center text-gray-400 py-8">
+                        No activities recorded yet. Start your first activity!
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Photo Modal -->
+        <div x-show="photoModal.show" x-transition class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50" @click="photoModal.show = false">
+            <img :src="photoModal.src" class="max-w-full max-h-full rounded-lg">
+        </div>
+
+        <!-- Loading Indicator -->
+        <div x-show="loading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40">
+            <div class="bg-gray-800 rounded-lg p-6 text-center">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+                <p class="text-sm text-gray-300">Generating activity...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/db.js"></script>
+    <script src="/js/ai.js"></script>
+    <script src="/js/app.js"></script>
+    
+    <script>
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => console.log('SW registered'))
+                    .catch(error => console.log('SW registration failed'));
+            });
+        }
+    </script>
+</body>
+</html>
+

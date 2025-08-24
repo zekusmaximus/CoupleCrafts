@@ -1,0 +1,195 @@
+/* Custom styles for CoupleCrafts PWA */
+
+/* Smooth transitions for all interactive elements */
+* {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #374151;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #6b7280;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+/* Touch-friendly tap targets */
+button, a, input, textarea, select {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Swipe gesture indicators */
+.swipe-indicator {
+    position: relative;
+    overflow: hidden;
+}
+
+.swipe-indicator::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+    transform: translateY(-50%);
+    animation: swipe-hint 2s infinite;
+}
+
+@keyframes swipe-hint {
+    0% { left: -100%; }
+    50% { left: 100%; }
+    100% { left: 100%; }
+}
+
+/* Photo upload area styling */
+.photo-upload-area {
+    border: 2px dashed #6b7280;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.photo-upload-area:hover {
+    border-color: #3b82f6;
+}
+
+.photo-upload-area.dragover {
+    border-color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Activity card animations */
+.activity-card {
+    transform: translateX(0);
+    transition: transform 0.3s ease-in-out;
+}
+
+.activity-card.slide-left {
+    transform: translateX(-100%);
+}
+
+.activity-card.slide-right {
+    transform: translateX(100%);
+}
+
+/* Rating stars */
+.rating-stars {
+    display: flex;
+    gap: 4px;
+}
+
+.rating-star {
+    cursor: pointer;
+    color: #6b7280;
+    transition: color 0.2s ease;
+}
+
+.rating-star:hover,
+.rating-star.active {
+    color: #fbbf24;
+}
+
+/* Timeline connector */
+.timeline-item {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    top: 0;
+    bottom: -1rem;
+    width: 2px;
+    background: #374151;
+}
+
+.timeline-item:last-child::before {
+    display: none;
+}
+
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    left: 0.25rem;
+    top: 0.5rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    background: #3b82f6;
+    border-radius: 50%;
+}
+
+/* Loading animation */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 640px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    /* Larger touch targets on mobile */
+    button {
+        min-height: 48px;
+        min-width: 48px;
+    }
+    
+    /* Prevent zoom on input focus */
+    input, textarea, select {
+        font-size: 16px;
+    }
+}
+
+/* Dark mode optimizations */
+@media (prefers-color-scheme: dark) {
+    /* Additional dark mode styles if needed */
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .bg-gray-800 {
+        background-color: #000000;
+        border: 1px solid #ffffff;
+    }
+    
+    .text-gray-300 {
+        color: #ffffff;
+    }
+}
+

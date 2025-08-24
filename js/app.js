@@ -1,0 +1,372 @@
+// Main Alpine.js Application for CoupleCrafts
+function app() {
+    return {
+        // App state
+        activeTab: 'activities',
+        showSettings: false,
+        showAddEntry: false,
+        loading: false,
+        
+        // Settings
+        aiEnabled: false,
+        aiProvider: 'gemini',
+        apiKey: '',
+        
+        // Current activity
+        currentActivity: {
+            title: 'Welcome to CoupleCrafts!',
+            description: 'Get AI-generated activity prompts or browse our curated collection of romantic activities.',
+            instructions: [],
+            supplies: [],
+            cost: '',
+            isFavorite: false,
+            rating: 0
+        },
+        
+        // Activities data
+        activities: [],
+        fallbackActivities: [],
+        currentActivityIndex: 0,
+        
+        // History data
+        activityHistory: [],
+        newEntry: {
+            title: '',
+            hisNotes: '',
+            herNotes: '',
+            photo: null
+        },
+        
+        // Photo modal
+        photoModal: {
+            show: false,
+            src: ''
+        },
+
+        // Initialize the app
+        async init() {
+            try {
+                // Initialize database
+                await window.coupleCraftsDB.init();
+                console.log('Database initialized');
+                
+                // Load settings
+                await this.loadSettings();
+                
+                // Load fallback activities
+                await this.loadFallbackActivities();
+                
+                // Load saved activities and history
+                await this.loadActivities();
+                await this.loadHistory();
+                
+                // Set initial activity
+                if (this.activities.length > 0) {
+                    this.currentActivity = this.activities[0];
+                } else if (this.fallbackActivities.length > 0) {
+                    this.currentActivity = this.fallbackActivities[0];
+                }
+                
+                console.log('App initialized successfully');
+            } catch (error) {
+                console.error('Failed to initialize app:', error);
+                // Continue with fallback data
+                await this.loadFallbackActivities();
+                if (this.fallbackActivities.length > 0) {
+                    this.currentActivity = this.fallbackActivities[0];
+                }
+            }
+        },
+
+        // Settings management
+        async loadSettings() {
+            try {
+                this.aiEnabled = await window.coupleCraftsDB.getSetting('aiEnabled', false);
+                this.aiProvider = await window.coupleCraftsDB.getSetting('aiProvider', 'gemini');
+                this.apiKey = await window.coupleCraftsDB.getSetting('apiKey', '');
+            } catch (error) {
+                console.error('Failed to load settings:', error);
+            }
+        },
+
+        async saveSettings() {
+            try {
+                await window.coupleCraftsDB.saveSetting('aiEnabled', this.aiEnabled);
+                await window.coupleCraftsDB.saveSetting('aiProvider', this.aiProvider);
+                await window.coupleCraftsDB.saveSetting('apiKey', this.apiKey);
+            } catch (error) {
+                console.error('Failed to save settings:', error);
+            }
+        },
+
+        // Activity management
+        async loadFallbackActivities() {
+            try {
+                const response = await fetch('/data/fallback-activities.json');
+                const data = await response.json();
+                this.fallbackActivities = data.activities;
+                console.log(`Loaded ${this.fallbackActivities.length} fallback activities`);
+            } catch (error) {
+                console.error('Failed to load fallback activities:', error);
+                // Create minimal fallback if file fails to load
+                this.fallbackActivities = [{
+                    title: 'Romantic Conversation',
+                    description: 'Share your dreams and aspirations with each other.',
+                    instructions: ['Find a comfortable spot', 'Take turns sharing your biggest dreams', 'Listen actively and ask questions'],
+                    supplies: ['Comfortable seating'],
+                    cost: '$0',
+                    source: 'emergency-fallback'
+                }];
+            }
+        },
+
+        async loadActivities() {
+            try {
+                const savedActivities = await window.coupleCraftsDB.getActivities();
+                const userActivities = await window.coupleCraftsDB.getUserActivities();
+                this.activities = [...savedActivities, ...userActivities, ...this.fallbackActivities];
+                console.log(`Loaded ${this.activities.length} total activities`);
+            } catch (error) {
+                console.error('Failed to load activities:', error);
+                this.activities = [...this.fallbackActivities];
+            }
+        },
+
+        async getNewActivity() {
+            if (this.aiEnabled && this.apiKey) {
+                await this.generateAIActivity();
+            } else {
+                this.getRandomFallbackActivity();
+            }
+        },
+
+        async generateAIActivity() {
+            this.loading = true;
+            try {
+                const activity = await window.aiService.generateActivity(
+                    this.aiProvider, 
+                    this.apiKey
+                );
+                
+                // Save to database
+                await window.coupleCraftsDB.saveActivity(activity);
+                
+                // Update current activity
+                this.currentActivity = activity;
+                
+                // Add to activities list
+                this.activities.unshift(activity);
+                
+                console.log('Generated new AI activity:', activity.title);
+            } catch (error) {
+                console.error('AI generation failed:', error);
+                alert('Failed to generate AI activity. Using fallback activity instead.');
+                this.getRandomFallbackActivity();
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        getRandomFallbackActivity() {
+            if (this.fallbackActivities.length > 0) {
+                const randomIndex = Math.floor(Math.random() * this.fallbackActivities.length);
+                this.currentActivity = this.fallbackActivities[randomIndex];
+                this.currentActivityIndex = randomIndex;
+            }
+        },
+
+        // Navigation
+        nextActivity() {
+            if (this.activities.length > 0) {
+                this.currentActivityIndex = (this.currentActivityIndex + 1) % this.activities.length;
+                this.currentActivity = this.activities[this.currentActivityIndex];
+            }
+        },
+
+        previousActivity() {
+            if (this.activities.length > 0) {
+                this.currentActivityIndex = this.currentActivityIndex > 0 
+                    ? this.currentActivityIndex - 1 
+                    : this.activities.length - 1;
+                this.currentActivity = this.activities[this.currentActivityIndex];
+            }
+        },
+
+        // Activity interactions
+        async toggleFavorite() {
+            this.currentActivity.isFavorite = !this.currentActivity.isFavorite;
+            
+            if (this.currentActivity.id) {
+                try {
+                    await window.coupleCraftsDB.updateActivity(this.currentActivity.id, {
+                        isFavorite: this.currentActivity.isFavorite
+                    });
+                } catch (error) {
+                    console.error('Failed to update favorite status:', error);
+                }
+            }
+        },
+
+        async rateActivity() {
+            const rating = prompt('Rate this activity (1-5 stars):');
+            if (rating && rating >= 1 && rating <= 5) {
+                this.currentActivity.rating = parseInt(rating);
+                
+                if (this.currentActivity.id) {
+                    try {
+                        await window.coupleCraftsDB.updateActivity(this.currentActivity.id, {
+                            rating: this.currentActivity.rating
+                        });
+                    } catch (error) {
+                        console.error('Failed to update rating:', error);
+                    }
+                }
+            }
+        },
+
+        startActivity() {
+            // Switch to history tab and prepare for entry
+            this.activeTab = 'history';
+            this.showAddEntry = true;
+            this.newEntry.title = this.currentActivity.title;
+        },
+
+        // History management
+        async loadHistory() {
+            try {
+                this.activityHistory = await window.coupleCraftsDB.getActivityHistory();
+                
+                // Load photos for each history entry
+                for (let entry of this.activityHistory) {
+                    if (entry.photoId) {
+                        const photo = await window.coupleCraftsDB.getPhoto(entry.photoId);
+                        if (photo) {
+                            entry.photo = photo.url;
+                        }
+                    }
+                }
+                
+                console.log(`Loaded ${this.activityHistory.length} history entries`);
+            } catch (error) {
+                console.error('Failed to load history:', error);
+                this.activityHistory = [];
+            }
+        },
+
+        async handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                this.newEntry.photo = file;
+            }
+        },
+
+        async saveEntry() {
+            if (!this.newEntry.title.trim()) {
+                alert('Please enter an activity title');
+                return;
+            }
+
+            try {
+                const entry = {
+                    title: this.newEntry.title,
+                    hisNotes: this.newEntry.hisNotes,
+                    herNotes: this.newEntry.herNotes,
+                    activityId: this.currentActivity.id || null,
+                    date: new Date().toISOString()
+                };
+
+                // Save entry to database
+                const entryId = await window.coupleCraftsDB.saveActivityHistory(entry);
+                entry.id = entryId;
+
+                // Save photo if provided
+                if (this.newEntry.photo) {
+                    const photoId = await window.coupleCraftsDB.savePhoto(this.newEntry.photo, entryId);
+                    entry.photoId = photoId;
+                    entry.photo = URL.createObjectURL(this.newEntry.photo);
+                }
+
+                // Add to history list
+                this.activityHistory.unshift(entry);
+
+                // Reset form
+                this.newEntry = {
+                    title: '',
+                    hisNotes: '',
+                    herNotes: '',
+                    photo: null
+                };
+                this.showAddEntry = false;
+
+                console.log('Activity entry saved successfully');
+            } catch (error) {
+                console.error('Failed to save entry:', error);
+                alert('Failed to save activity entry');
+            }
+        },
+
+        // Photo modal
+        showPhotoModal(src) {
+            this.photoModal.src = src;
+            this.photoModal.show = true;
+        },
+
+        // Utility functions
+        formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        },
+
+        // Watch for settings changes
+        $watch: {
+            aiEnabled() {
+                this.saveSettings();
+            },
+            aiProvider() {
+                this.saveSettings();
+            },
+            apiKey() {
+                this.saveSettings();
+            }
+        }
+    };
+}
+
+// Initialize app when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('CoupleCrafts PWA loaded');
+});
+
+// Handle touch gestures for swipe navigation
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].screenX;
+});
+
+document.addEventListener('touchend', e => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+});
+
+function handleSwipe() {
+    const swipeThreshold = 50;
+    const swipeDistance = touchEndX - touchStartX;
+    
+    if (Math.abs(swipeDistance) > swipeThreshold) {
+        const appElement = document.querySelector('#app');
+        if (appElement && appElement.__x) {
+            const appData = appElement.__x.$data;
+            
+            if (appData.activeTab === 'activities') {
+                if (swipeDistance > 0) {
+                    appData.previousActivity();
+                } else {
+                    appData.nextActivity();
+                }
+            }
+        }
+    }
+}
+

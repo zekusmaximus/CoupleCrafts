@@ -1,0 +1,905 @@
+{
+  "activities": [
+    {
+      "id": 1,
+      "title": "Time Traveler's Dinner",
+      "description": "Cook a meal from a specific historical period while roleplaying as characters from that era.",
+      "category": "culinary adventure",
+      "instructions": [
+        "Choose a historical period (Medieval, Victorian, 1950s, etc.)",
+        "Research typical foods and cooking methods from that era",
+        "Dress up in period-appropriate clothing or accessories",
+        "Cook the meal using traditional techniques when possible",
+        "Eat dinner while staying in character and discussing the 'current events' of that time"
+      ],
+      "supplies": ["Historical recipes", "Basic cooking ingredients", "Costume pieces or accessories"],
+      "cost": "$5-10",
+      "duration": "90 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 2,
+      "title": "Alien Language Creation",
+      "description": "Invent a complete alien language together and use it to communicate for an evening.",
+      "category": "speculative fiction",
+      "instructions": [
+        "Create basic sounds and phonetics for your alien language",
+        "Develop 20-30 essential words (hello, love, food, etc.)",
+        "Write down grammar rules and sentence structure",
+        "Practice conversations using only your new language",
+        "Create a small dictionary together"
+      ],
+      "supplies": ["Paper", "Pens", "Voice recorder (optional)"],
+      "cost": "$0-2",
+      "duration": "75 minutes",
+      "difficulty": "Hard",
+      "source": "fallback"
+    },
+    {
+      "id": 3,
+      "title": "Memory Palace Building",
+      "description": "Create a shared imaginary space filled with your favorite memories together.",
+      "category": "romantic bonding",
+      "instructions": [
+        "Sit comfortably facing each other",
+        "Take turns describing a favorite memory you share",
+        "Visualize placing each memory in a room of an imaginary palace",
+        "Draw a simple map of your memory palace",
+        "Take a 'tour' through the palace, revisiting each memory"
+      ],
+      "supplies": ["Paper", "Colored pencils", "Comfortable seating"],
+      "cost": "$0-3",
+      "duration": "45 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 4,
+      "title": "Dystopian Society Design",
+      "description": "Create a fictional dystopian world and plan how you'd survive together.",
+      "category": "speculative fiction",
+      "instructions": [
+        "Brainstorm what makes your dystopian world unique",
+        "Define the rules, government, and daily life",
+        "Create character backgrounds for yourselves in this world",
+        "Plan your survival strategy and resistance movement",
+        "Write a short story about your first day in this world"
+      ],
+      "supplies": ["Paper", "Pens", "World-building templates (optional)"],
+      "cost": "$0-2",
+      "duration": "60 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 5,
+      "title": "Couples' Art Gallery",
+      "description": "Create individual artworks and curate a gallery exhibition for each other.",
+      "category": "artistic creation",
+      "instructions": [
+        "Choose a theme for your gallery (emotions, dreams, future, etc.)",
+        "Each person creates 3-5 small artworks in any medium",
+        "Write artist statements for each piece",
+        "Set up a gallery space in your home",
+        "Give each other guided tours with explanations"
+      ],
+      "supplies": ["Art supplies (paper, paints, markers, etc.)", "Small frames or display area"],
+      "cost": "$5-10",
+      "duration": "120 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 6,
+      "title": "Love Potion Mocktails",
+      "description": "Create magical-themed drinks with special 'powers' and backstories.",
+      "category": "culinary adventure",
+      "instructions": [
+        "Research magical ingredients and their supposed properties",
+        "Design 2-3 mocktail recipes with mystical names",
+        "Create labels with ingredient lists and 'magical effects'",
+        "Mix the drinks together while explaining their powers",
+        "Toast to your magical evening"
+      ],
+      "supplies": ["Fruit juices", "Sparkling water", "Herbs/spices", "Food coloring", "Labels"],
+      "cost": "$6-10",
+      "duration": "45 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 7,
+      "title": "Parallel Universe Selves",
+      "description": "Imagine and roleplay as versions of yourselves from alternate realities.",
+      "category": "speculative fiction",
+      "instructions": [
+        "Each person creates 2-3 alternate universe versions of themselves",
+        "Define how these universes differ from ours",
+        "Describe your alternate selves' lives, jobs, and personalities",
+        "Act out conversations between your alternate selves",
+        "Discuss which universe you'd want to visit"
+      ],
+      "supplies": ["Paper", "Pens", "Costume pieces (optional)"],
+      "cost": "$0-5",
+      "duration": "50 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 8,
+      "title": "Gratitude Jar Creation",
+      "description": "Create a beautiful jar filled with things you're grateful for about each other.",
+      "category": "romantic bonding",
+      "instructions": [
+        "Decorate a jar or container together",
+        "Cut colorful paper into small strips",
+        "Each person writes 10 things they're grateful for about their partner",
+        "Fold the papers and place them in the jar",
+        "Take turns drawing and reading gratitude notes aloud"
+      ],
+      "supplies": ["Glass jar", "Colored paper", "Pens", "Decorative materials"],
+      "cost": "$3-7",
+      "duration": "40 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 9,
+      "title": "Superhero Origin Stories",
+      "description": "Create superhero personas for each other and design your origin stories.",
+      "category": "creative expression",
+      "instructions": [
+        "Interview each other about ideal superpowers",
+        "Design superhero costumes using household items",
+        "Create origin stories explaining how you got your powers",
+        "Draw comic book covers featuring your superhero selves",
+        "Act out a scene where your heroes meet for the first time"
+      ],
+      "supplies": ["Paper", "Markers", "Household items for costumes", "Scissors"],
+      "cost": "$2-5",
+      "duration": "70 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 10,
+      "title": "Mindful Tea Ceremony",
+      "description": "Create a peaceful tea ceremony focused on connection and mindfulness.",
+      "category": "mindful connection",
+      "instructions": [
+        "Set up a quiet, comfortable space with cushions",
+        "Choose 2-3 different teas to sample",
+        "Practice mindful breathing together for 5 minutes",
+        "Slowly prepare and serve tea to each other",
+        "Share one thing you appreciate about this moment"
+      ],
+      "supplies": ["Various teas", "Teapot or cups", "Cushions", "Candles (optional)"],
+      "cost": "$4-8",
+      "duration": "35 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 11,
+      "title": "Future Technology Brainstorm",
+      "description": "Invent future technologies and discuss their impact on relationships.",
+      "category": "speculative fiction",
+      "instructions": [
+        "Brainstorm 5 technologies that might exist in 50 years",
+        "Discuss how each would change daily life and relationships",
+        "Design one technology specifically for couples",
+        "Create a simple prototype or drawing",
+        "Present your invention to each other"
+      ],
+      "supplies": ["Paper", "Pens", "Craft materials for prototype"],
+      "cost": "$2-6",
+      "duration": "55 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 12,
+      "title": "Storytelling Dice Game",
+      "description": "Use dice or random prompts to create collaborative stories together.",
+      "category": "storytelling",
+      "instructions": [
+        "Create story prompt dice using paper cubes",
+        "Include characters, settings, objects, and emotions",
+        "Take turns rolling dice and adding to the story",
+        "Each person speaks for 2 minutes before passing",
+        "Record or write down your favorite stories"
+      ],
+      "supplies": ["Paper", "Dice or random prompt cards", "Pens"],
+      "cost": "$1-3",
+      "duration": "40 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 13,
+      "title": "Edible Flower Garden",
+      "description": "Create beautiful and edible flower arrangements for a romantic meal.",
+      "category": "culinary adventure",
+      "instructions": [
+        "Research edible flowers available in your area",
+        "Purchase or forage safe edible flowers",
+        "Create small bouquets for table decoration",
+        "Prepare a simple salad incorporating the flowers",
+        "Enjoy a romantic meal with your floral creations"
+      ],
+      "supplies": ["Edible flowers", "Salad ingredients", "Small vases"],
+      "cost": "$6-10",
+      "duration": "50 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 14,
+      "title": "Dream Journal Exchange",
+      "description": "Share and illustrate each other's dreams, creating a visual dream diary.",
+      "category": "artistic creation",
+      "instructions": [
+        "Each person shares 2-3 memorable dreams",
+        "Listen carefully and ask clarifying questions",
+        "Draw or paint visual representations of your partner's dreams",
+        "Create a small booklet with dream illustrations",
+        "Discuss what the dreams might symbolize"
+      ],
+      "supplies": ["Paper", "Art supplies", "Stapler for booklet"],
+      "cost": "$3-7",
+      "duration": "65 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 15,
+      "title": "Relationship Time Capsule",
+      "description": "Create a time capsule to open on a future anniversary.",
+      "category": "romantic bonding",
+      "instructions": [
+        "Find a container that seals well",
+        "Write letters to your future selves",
+        "Include current photos and small mementos",
+        "Record a short video message together",
+        "Seal the capsule and choose an opening date"
+      ],
+      "supplies": ["Sealable container", "Paper", "Pens", "Photos", "Small mementos"],
+      "cost": "$3-8",
+      "duration": "45 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 16,
+      "title": "Emotion Color Painting",
+      "description": "Express your feelings through abstract color paintings and interpret each other's work.",
+      "category": "artistic creation",
+      "instructions": [
+        "Set up painting supplies in a comfortable space",
+        "Each person thinks of a strong emotion or memory",
+        "Paint abstract representations using only colors and shapes",
+        "Don't reveal what you're painting until finished",
+        "Try to guess the emotion in your partner's painting"
+      ],
+      "supplies": ["Canvas or paper", "Paints", "Brushes", "Water containers"],
+      "cost": "$5-10",
+      "duration": "50 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 17,
+      "title": "Space Colony Planning",
+      "description": "Design a space colony where you'd live together and plan your new society.",
+      "category": "speculative fiction",
+      "instructions": [
+        "Choose a planet or moon for your colony",
+        "Design the layout and architecture of your settlement",
+        "Plan the government, laws, and social structure",
+        "Assign roles and responsibilities for yourselves",
+        "Create a constitution for your new society"
+      ],
+      "supplies": ["Paper", "Pens", "Ruler", "Colored pencils"],
+      "cost": "$2-5",
+      "duration": "75 minutes",
+      "difficulty": "Hard",
+      "source": "fallback"
+    },
+    {
+      "id": 18,
+      "title": "Couples' Meditation Garden",
+      "description": "Create a small indoor meditation space and practice mindfulness together.",
+      "category": "mindful connection",
+      "instructions": [
+        "Choose a quiet corner or area in your home",
+        "Arrange cushions, plants, and calming objects",
+        "Light candles or incense for ambiance",
+        "Practice guided meditation together for 15 minutes",
+        "Share your meditation experience with each other"
+      ],
+      "supplies": ["Cushions", "Plants or flowers", "Candles", "Meditation app or music"],
+      "cost": "$5-10",
+      "duration": "40 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 19,
+      "title": "Mystery Dinner Theater",
+      "description": "Create and perform a mystery dinner theater for two with multiple characters.",
+      "category": "storytelling",
+      "instructions": [
+        "Choose a mystery theme (1920s, Victorian, modern)",
+        "Create 4-6 characters with motives and secrets",
+        "Write a simple mystery plot with clues",
+        "Take turns playing different characters during dinner",
+        "Try to solve the mystery together by the end"
+      ],
+      "supplies": ["Paper", "Pens", "Costume pieces", "Dinner ingredients"],
+      "cost": "$6-10",
+      "duration": "90 minutes",
+      "difficulty": "Hard",
+      "source": "fallback"
+    },
+    {
+      "id": 20,
+      "title": "Love Language Exploration",
+      "description": "Discover and practice each other's love languages through creative activities.",
+      "category": "romantic bonding",
+      "instructions": [
+        "Take a love languages quiz together",
+        "Discuss your results and what they mean",
+        "Plan one activity for each love language",
+        "Spend 10 minutes practicing your partner's primary love language",
+        "Reflect on how it felt to give and receive in different ways"
+      ],
+      "supplies": ["Love languages quiz", "Paper", "Pens", "Small gifts or treats"],
+      "cost": "$3-8",
+      "duration": "60 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 21,
+      "title": "Miniature World Building",
+      "description": "Create a tiny fantasy world using household objects and craft supplies.",
+      "category": "creative expression",
+      "instructions": [
+        "Choose a theme for your miniature world",
+        "Gather small objects, toys, and craft supplies",
+        "Build landscapes using cardboard, clay, or fabric",
+        "Create tiny inhabitants and their stories",
+        "Take photos of your world from different angles"
+      ],
+      "supplies": ["Small objects", "Cardboard", "Clay or playdough", "Craft supplies"],
+      "cost": "$4-9",
+      "duration": "80 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 22,
+      "title": "Couples' Cookbook Creation",
+      "description": "Compile your favorite recipes and create a personalized cookbook together.",
+      "category": "culinary adventure",
+      "instructions": [
+        "Gather your favorite recipes from family and friends",
+        "Test and modify recipes to your taste",
+        "Write personal stories about each recipe",
+        "Design pages with photos and decorations",
+        "Bind your cookbook and plan a celebration meal"
+      ],
+      "supplies": ["Recipe cards", "Binder or notebook", "Decorative materials", "Photos"],
+      "cost": "$5-10",
+      "duration": "100 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 23,
+      "title": "Time Machine Adventures",
+      "description": "Plan imaginary trips through time and discuss what you'd do in different eras.",
+      "category": "speculative fiction",
+      "instructions": [
+        "Choose 3 different time periods to 'visit'",
+        "Research what life was like in each era",
+        "Plan what you'd want to see and do",
+        "Discuss how you'd fit in or stand out",
+        "Create a travel journal for your time adventures"
+      ],
+      "supplies": ["Paper", "Pens", "History books or internet access"],
+      "cost": "$0-3",
+      "duration": "55 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 24,
+      "title": "Sensory Love Map",
+      "description": "Create a map of your relationship using all five senses.",
+      "category": "romantic bonding",
+      "instructions": [
+        "Draw a large map outline on paper",
+        "Mark locations with special meaning to your relationship",
+        "For each location, note what you see, hear, smell, taste, and feel",
+        "Add symbols and colors to represent different memories",
+        "Take turns sharing stories about each location"
+      ],
+      "supplies": ["Large paper", "Colored pencils", "Markers", "Stickers"],
+      "cost": "$3-6",
+      "duration": "50 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 25,
+      "title": "Robot Companion Design",
+      "description": "Design the perfect robot companion for your relationship and daily life.",
+      "category": "speculative fiction",
+      "instructions": [
+        "Discuss what tasks your robot would help with",
+        "Design its appearance and personality",
+        "Create a list of its features and abilities",
+        "Draw blueprints or sketches of your robot",
+        "Write a day-in-the-life story featuring your robot"
+      ],
+      "supplies": ["Paper", "Pens", "Ruler", "Colored pencils"],
+      "cost": "$2-4",
+      "duration": "60 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 26,
+      "title": "Couples' Game Show",
+      "description": "Create and host your own game show testing how well you know each other.",
+      "category": "playful games",
+      "instructions": [
+        "Write 20 questions about each other's preferences",
+        "Create different game rounds (trivia, charades, drawing)",
+        "Set up a 'game show' area with buzzers or bells",
+        "Take turns being host and contestants",
+        "Award silly prizes for correct answers"
+      ],
+      "supplies": ["Paper", "Pens", "Bells or noisemakers", "Small prizes"],
+      "cost": "$3-7",
+      "duration": "45 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 27,
+      "title": "Magical Potion Making",
+      "description": "Create 'magical' potions using kitchen ingredients and assign them special properties.",
+      "category": "creative expression",
+      "instructions": [
+        "Gather colorful liquids and safe ingredients",
+        "Create potion recipes with mystical names",
+        "Mix potions while chanting made-up incantations",
+        "Assign magical properties to each potion",
+        "Create labels and a potion master's guidebook"
+      ],
+      "supplies": ["Food coloring", "Various liquids", "Spices", "Small bottles", "Labels"],
+      "cost": "$4-8",
+      "duration": "45 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 28,
+      "title": "Relationship Timeline Art",
+      "description": "Create a visual timeline of your relationship with artistic elements.",
+      "category": "artistic creation",
+      "instructions": [
+        "Gather photos and mementos from your relationship",
+        "Create a long timeline on paper or poster board",
+        "Mark important dates and milestones",
+        "Add drawings, quotes, and decorative elements",
+        "Include predictions for future milestones"
+      ],
+      "supplies": ["Large paper", "Photos", "Art supplies", "Glue", "Markers"],
+      "cost": "$4-9",
+      "duration": "70 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 29,
+      "title": "Couples' Escape Room",
+      "description": "Design and solve a homemade escape room challenge together.",
+      "category": "playful games",
+      "instructions": [
+        "Choose a theme for your escape room",
+        "Create 5-7 puzzles using household items",
+        "Hide clues around your home",
+        "Set a time limit and rules",
+        "Work together to solve all puzzles and 'escape'"
+      ],
+      "supplies": ["Household items", "Paper", "Pens", "Locks or boxes", "Timer"],
+      "cost": "$2-6",
+      "duration": "60 minutes",
+      "difficulty": "Hard",
+      "source": "fallback"
+    },
+    {
+      "id": 30,
+      "title": "Future Family Planning",
+      "description": "Imagine and plan your ideal future family life together.",
+      "category": "romantic bonding",
+      "instructions": [
+        "Discuss your dreams for the future",
+        "Create a vision board with images and words",
+        "Plan your ideal home and lifestyle",
+        "Discuss values you want to share",
+        "Write a letter to your future family"
+      ],
+      "supplies": ["Magazines", "Poster board", "Scissors", "Glue", "Markers"],
+      "cost": "$3-7",
+      "duration": "65 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 31,
+      "title": "Alien Artifact Discovery",
+      "description": "Create mysterious alien artifacts and develop theories about their purpose.",
+      "category": "speculative fiction",
+      "instructions": [
+        "Use household items to create 'alien artifacts'",
+        "Age and modify objects to look mysterious",
+        "Develop theories about each artifact's purpose",
+        "Create a scientific report on your discoveries",
+        "Present your findings to each other"
+      ],
+      "supplies": ["Household objects", "Paint", "Craft supplies", "Paper"],
+      "cost": "$3-8",
+      "duration": "55 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 32,
+      "title": "Mindful Movement Dance",
+      "description": "Create a slow, mindful dance routine that focuses on connection and presence.",
+      "category": "mindful connection",
+      "instructions": [
+        "Choose calming instrumental music",
+        "Start with simple breathing exercises together",
+        "Create slow, flowing movements that mirror each other",
+        "Focus on eye contact and synchronized breathing",
+        "End with a few minutes of stillness together"
+      ],
+      "supplies": ["Calming music", "Comfortable space", "Yoga mats (optional)"],
+      "cost": "$0-2",
+      "duration": "30 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 33,
+      "title": "Couples' Poetry Slam",
+      "description": "Write and perform original poetry about your relationship and experiences.",
+      "category": "creative expression",
+      "instructions": [
+        "Choose themes related to your relationship",
+        "Each person writes 2-3 short poems",
+        "Practice performing with emotion and rhythm",
+        "Set up a 'stage' area in your home",
+        "Take turns performing and appreciating each other's work"
+      ],
+      "supplies": ["Paper", "Pens", "Microphone (optional)"],
+      "cost": "$0-3",
+      "duration": "50 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 34,
+      "title": "Dessert Laboratory",
+      "description": "Experiment with creating unique dessert combinations and flavors.",
+      "category": "culinary adventure",
+      "instructions": [
+        "Gather various dessert ingredients and toppings",
+        "Create 3-4 experimental dessert combinations",
+        "Document each 'experiment' with photos and notes",
+        "Rate each creation on taste, appearance, and creativity",
+        "Declare a winner and celebrate with your favorite"
+      ],
+      "supplies": ["Ice cream", "Fruits", "Sauces", "Cookies", "Candies"],
+      "cost": "$6-10",
+      "duration": "40 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 35,
+      "title": "Relationship Superhero Team",
+      "description": "Create a superhero team based on your relationship strengths and dynamics.",
+      "category": "creative expression",
+      "instructions": [
+        "Identify each person's relationship 'superpowers'",
+        "Design costumes that represent these strengths",
+        "Create a team name and logo",
+        "Write origin stories for your superhero partnership",
+        "Plan how you'd save the world together"
+      ],
+      "supplies": ["Paper", "Markers", "Fabric scraps", "Craft supplies"],
+      "cost": "$3-7",
+      "duration": "65 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 36,
+      "title": "Memory Lane Photo Recreation",
+      "description": "Recreate old photos from your relationship and create new memories.",
+      "category": "romantic bonding",
+      "instructions": [
+        "Gather old photos from your relationship",
+        "Choose 3-5 photos to recreate",
+        "Set up similar poses, locations, or outfits",
+        "Take new photos trying to match the originals",
+        "Create a then-and-now photo album"
+      ],
+      "supplies": ["Old photos", "Camera or phone", "Props or costumes"],
+      "cost": "$2-5",
+      "duration": "45 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 37,
+      "title": "Fictional World Travel Agency",
+      "description": "Create a travel agency that books trips to fictional worlds and universes.",
+      "category": "speculative fiction",
+      "instructions": [
+        "Choose 5 fictional worlds you'd like to visit",
+        "Create travel brochures for each destination",
+        "Design itineraries with activities and attractions",
+        "Set prices and package deals",
+        "Role-play as travel agents booking each other's dream trips"
+      ],
+      "supplies": ["Paper", "Markers", "Magazines for images", "Scissors", "Glue"],
+      "cost": "$3-6",
+      "duration": "70 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 38,
+      "title": "Couples' Meditation Mandala",
+      "description": "Create a collaborative mandala while practicing mindfulness together.",
+      "category": "mindful connection",
+      "instructions": [
+        "Set up a quiet space with art supplies",
+        "Start with breathing exercises to center yourselves",
+        "Begin drawing a mandala from the center outward",
+        "Take turns adding elements without planning",
+        "Focus on the process rather than the outcome"
+      ],
+      "supplies": ["Large paper", "Colored pencils", "Compass", "Ruler"],
+      "cost": "$3-6",
+      "duration": "60 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 39,
+      "title": "Love Story Mad Libs",
+      "description": "Create hilarious love stories using the Mad Libs format.",
+      "category": "storytelling",
+      "instructions": [
+        "Write 3-4 romantic story templates with blanks",
+        "Take turns asking for words without revealing the story",
+        "Fill in the blanks with the suggested words",
+        "Read the completed stories aloud dramatically",
+        "Vote on the funniest or most romantic story"
+      ],
+      "supplies": ["Paper", "Pens"],
+      "cost": "$0-2",
+      "duration": "35 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 40,
+      "title": "Relationship Recipe Book",
+      "description": "Create 'recipes' for different aspects of your relationship.",
+      "category": "romantic bonding",
+      "instructions": [
+        "Think of relationship elements as recipe ingredients",
+        "Write recipes for things like 'Perfect Date Night' or 'Conflict Resolution'",
+        "Include ingredients, instructions, and serving suggestions",
+        "Illustrate your recipes with drawings or photos",
+        "Compile into a personalized relationship cookbook"
+      ],
+      "supplies": ["Paper", "Pens", "Art supplies", "Binder"],
+      "cost": "$3-7",
+      "duration": "55 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 41,
+      "title": "Quantum Physics Love Theory",
+      "description": "Create humorous scientific theories about how love works using physics concepts.",
+      "category": "speculative fiction",
+      "instructions": [
+        "Research basic quantum physics concepts",
+        "Apply these concepts to explain how love works",
+        "Create diagrams and equations for your theories",
+        "Write a scientific paper on 'The Physics of Love'",
+        "Present your findings to each other with serious scientific demeanor"
+      ],
+      "supplies": ["Paper", "Pens", "Science books or internet", "Ruler"],
+      "cost": "$0-3",
+      "duration": "60 minutes",
+      "difficulty": "Hard",
+      "source": "fallback"
+    },
+    {
+      "id": 42,
+      "title": "Couples' Vision Board",
+      "description": "Create a shared vision board for your future goals and dreams.",
+      "category": "romantic bonding",
+      "instructions": [
+        "Discuss your individual and shared goals",
+        "Gather magazines and printed images",
+        "Cut out images and words that represent your dreams",
+        "Arrange them on a large board or poster",
+        "Add personal drawings and written affirmations"
+      ],
+      "supplies": ["Poster board", "Magazines", "Scissors", "Glue", "Markers"],
+      "cost": "$4-8",
+      "duration": "50 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 43,
+      "title": "Emotion Sculpture Garden",
+      "description": "Create abstract sculptures representing different emotions in your relationship.",
+      "category": "artistic creation",
+      "instructions": [
+        "Choose 5-6 emotions important to your relationship",
+        "Use clay, playdough, or household items to sculpt",
+        "Create abstract representations of each emotion",
+        "Arrange your sculptures in a 'garden' display",
+        "Discuss what each sculpture means to you"
+      ],
+      "supplies": ["Clay or playdough", "Household sculpting materials", "Display area"],
+      "cost": "$4-9",
+      "duration": "65 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 44,
+      "title": "Time Capsule Restaurant",
+      "description": "Create a restaurant menu from the future and prepare futuristic dishes.",
+      "category": "culinary adventure",
+      "instructions": [
+        "Imagine what food might be like in 100 years",
+        "Design a futuristic restaurant menu",
+        "Use current ingredients to create 'future' dishes",
+        "Give dishes scientific-sounding names",
+        "Dine at your future restaurant with formal presentation"
+      ],
+      "supplies": ["Cooking ingredients", "Menu paper", "Fancy presentation items"],
+      "cost": "$6-10",
+      "duration": "75 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 45,
+      "title": "Couples' Trivia Championship",
+      "description": "Create personalized trivia questions about your relationship and compete.",
+      "category": "playful games",
+      "instructions": [
+        "Each person writes 15 trivia questions about your relationship",
+        "Include questions about firsts, favorites, and funny moments",
+        "Set up a game show format with rounds",
+        "Keep score and award points for correct answers",
+        "Crown a trivia champion with a silly prize"
+      ],
+      "supplies": ["Paper", "Pens", "Scoreboard", "Small prize"],
+      "cost": "$2-5",
+      "duration": "40 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 46,
+      "title": "Mindful Gratitude Walk",
+      "description": "Take a slow, mindful walk together focusing on gratitude and presence.",
+      "category": "mindful connection",
+      "instructions": [
+        "Choose a quiet walking route (indoor or outdoor)",
+        "Walk very slowly, focusing on each step",
+        "Take turns sharing one thing you're grateful for every few minutes",
+        "Notice details in your environment together",
+        "End with a few minutes of silent appreciation"
+      ],
+      "supplies": ["Comfortable walking shoes", "Quiet route"],
+      "cost": "$0",
+      "duration": "30 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 47,
+      "title": "Relationship Constellation Map",
+      "description": "Create a star map representing important people and moments in your relationship.",
+      "category": "romantic bonding",
+      "instructions": [
+        "Draw a large circle representing the night sky",
+        "Mark important people as stars of different sizes",
+        "Connect related people and events with constellation lines",
+        "Add planets for major life events",
+        "Create a legend explaining your relationship universe"
+      ],
+      "supplies": ["Large dark paper", "White/yellow pencils", "Ruler", "Stickers"],
+      "cost": "$3-6",
+      "duration": "50 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 48,
+      "title": "Couples' Invention Workshop",
+      "description": "Invent silly but useful devices to solve relationship 'problems'.",
+      "category": "creative expression",
+      "instructions": [
+        "Brainstorm minor relationship annoyances or challenges",
+        "Design ridiculous inventions to solve these problems",
+        "Create prototypes using household items",
+        "Write patent applications for your inventions",
+        "Present your inventions to each other with sales pitches"
+      ],
+      "supplies": ["Household items", "Tape", "Paper", "Pens", "Craft supplies"],
+      "cost": "$2-6",
+      "duration": "60 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    },
+    {
+      "id": 49,
+      "title": "Love Language Scavenger Hunt",
+      "description": "Create a scavenger hunt based on each other's love languages.",
+      "category": "romantic bonding",
+      "instructions": [
+        "Review each other's primary love languages",
+        "Create clues that incorporate acts of service, gifts, etc.",
+        "Hide small surprises around your home",
+        "Take turns following each other's scavenger hunts",
+        "End with a special surprise that combines both love languages"
+      ],
+      "supplies": ["Paper", "Pens", "Small gifts or treats", "Hiding spots"],
+      "cost": "$4-9",
+      "duration": "45 minutes",
+      "difficulty": "Easy",
+      "source": "fallback"
+    },
+    {
+      "id": 50,
+      "title": "Relationship Documentary",
+      "description": "Create a mock documentary about your relationship with interviews and reenactments.",
+      "category": "storytelling",
+      "instructions": [
+        "Plan segments for your relationship documentary",
+        "Interview each other about how you met and fell in love",
+        "Reenact important moments dramatically",
+        "Record everything on your phone or camera",
+        "Edit together and watch your relationship documentary"
+      ],
+      "supplies": ["Camera or phone", "Props for reenactments", "Editing app"],
+      "cost": "$0-3",
+      "duration": "80 minutes",
+      "difficulty": "Medium",
+      "source": "fallback"
+    }
+  ]
+}
+
