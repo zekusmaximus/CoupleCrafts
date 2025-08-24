@@ -1,12 +1,12 @@
 const CACHE_NAME = 'couplecrafts-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/css/styles.css',
-  '/js/app.js',
-  '/js/db.js',
-  '/js/ai.js',
-  '/data/fallback-activities.json',
+  './',
+  'index.html',
+  'css/styles.css',
+  'js/app.js',
+  'js/db.js',
+  'js/ai.js',
+  'data/fallback-activities.json',
   'https://cdn.tailwindcss.com/3.3.0',
   'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js'
 ];
@@ -36,12 +36,12 @@ self.addEventListener('fetch', event => {
         }
         return fetch(event.request);
       })
-      .catch(() => {
-        // If both cache and network fail, return offline page for navigation requests
-        if (event.request.destination === 'document') {
-          return caches.match('/index.html');
-        }
-      })
+        .catch(() => {
+          // If both cache and network fail, return offline page for navigation requests
+          if (event.request.destination === 'document') {
+            return caches.match('index.html');
+          }
+        })
   );
 });
 

@@ -8,13 +8,13 @@
     <!-- PWA Meta Tags -->
     <meta name="description" content="AI-powered at-home activity prompts for couples">
     <meta name="theme-color" content="#3b82f6">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="manifest.json">
     
     <!-- Apple PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="CoupleCrafts">
-    <link rel="apple-touch-icon" href="/images/icon-192.png">
+    <link rel="apple-touch-icon" href="images/icon-192.png">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -35,7 +35,7 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
     <div id="app" x-data="app()" class="flex flex-col min-h-screen">
@@ -293,16 +293,16 @@
     <div id="scrapbook-template" class="hidden"></div>
 
     <!-- Scripts -->
-    <script src="/js/db.js"></script>
-    <script src="/js/ai.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/ai.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="/js/app.js"></script>
+    <script src="js/app.js"></script>
     
     <script>
         // Register service worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('sw.js')
                     .then(registration => console.log('SW registered'))
                     .catch(error => console.log('SW registration failed'));
             });

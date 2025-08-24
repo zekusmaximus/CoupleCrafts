@@ -145,7 +145,7 @@ function app() {
         // Activity management
         async loadFallbackActivities() {
             try {
-                const response = await fetch('/data/fallback-activities.json');
+                const response = await fetch('data/fallback-activities.json');
                 const data = await response.json();
                 this.fallbackActivities = data.activities;
                 console.log(`Loaded ${this.fallbackActivities.length} fallback activities`);
