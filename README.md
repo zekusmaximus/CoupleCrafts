@@ -8,6 +8,7 @@ AI-powered at-home activity prompts for couples. Works fully client-side as a si
 - Favorites and ratings
 - Activity history with notes and photo attachments
 - Category filter and favorites-only view
+- Scrapbook PDF export
 
 ## Setup
 1. Open `index.html` in a browser, or use a local server for best results (service worker needs http/https).
@@ -44,6 +45,7 @@ Notes:
   - Click "Add Entry" to log what you did.
   - Attach a photo; a preview shows before saving.
   - Entries display in reverse chronological order; click a photo to enlarge.
+  - Click "Export Scrapbook" to choose all entries or only those since your last export and download a PDF for printing or gifting.
 
 ## Data Persistence
 All data (activities, history, photos, settings) is stored locally via IndexedDB. Photos are stored as blobs.
