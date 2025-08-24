@@ -5,6 +5,7 @@ function app() {
         activeTab: 'activities',
         showSettings: false,
         showAddEntry: false,
+        showExportOptions: false,
         loading: false,
         
         // Settings
@@ -60,6 +61,8 @@ function app() {
             src: ''
         },
 
+        lastScrapbookExportDate: null,
+
         // Initialize the app
         async init() {
             try {
@@ -76,6 +79,8 @@ function app() {
                 // Load saved activities and history
                 await this.loadActivities();
                 await this.loadHistory();
+
+                this.lastScrapbookExportDate = await window.coupleCraftsDB.getSetting('lastScrapbookExportDate', null);
                 
                 // Set initial activity from filtered list or fallback
                 if (this.activities.length > 0) {
@@ -373,6 +378,101 @@ function app() {
             } catch (error) {
                 console.error('Failed to save entry:', error);
                 alert('Failed to save activity entry');
+            }
+        },
+
+        async exportScrapbook(scope) {
+            try {
+                let entries = [...this.activityHistory].sort((a, b) => new Date(a.date) - new Date(b.date));
+                if (scope === 'since') {
+                    if (this.lastScrapbookExportDate) {
+                        const lastDate = new Date(this.lastScrapbookExportDate);
+                        entries = entries.filter(e => new Date(e.date) > lastDate);
+                    } else {
+                        alert('This is your first scrapbook!');
+                    }
+                }
+
+                if (entries.length === 0) {
+                    alert('No entries to export.');
+                    return;
+                }
+
+                const template = document.getElementById('scrapbook-template');
+                template.innerHTML = '';
+
+                const cover = document.createElement('div');
+                cover.className = 'min-h-screen flex flex-col justify-center items-center text-center p-8 bg-gradient-to-r from-pink-100 to-blue-100';
+                const title = document.createElement('h1');
+                title.className = 'text-3xl font-bold mb-4 text-pink-600';
+                title.textContent = 'Our CoupleCrafts Memories';
+                const dateEl = document.createElement('p');
+                dateEl.className = 'text-lg text-gray-700';
+                dateEl.textContent = new Date().toLocaleDateString();
+                cover.appendChild(title);
+                cover.appendChild(dateEl);
+                template.appendChild(cover);
+
+                entries.forEach(entry => {
+                    const entryDiv = document.createElement('div');
+                    entryDiv.className = 'my-4 p-6 bg-gradient-to-r from-pink-100 to-blue-100 border-2 border-pink-300 rounded-lg shadow-md';
+                    const header = document.createElement('div');
+                    header.className = 'text-center font-bold mb-2';
+                    header.textContent = `${entry.title} - ${this.formatDate(entry.date)}`;
+                    entryDiv.appendChild(header);
+
+                    if (entry.photo) {
+                        const img = document.createElement('img');
+                        img.src = entry.photo;
+                        img.className = 'max-w-md h-auto mx-auto my-4 rounded';
+                        entryDiv.appendChild(img);
+                    }
+
+                    const notes = document.createElement('div');
+                    notes.className = 'grid grid-cols-2 gap-4 text-sm';
+                    const his = document.createElement('div');
+                    const hisLabel = document.createElement('h4');
+                    hisLabel.className = 'font-semibold text-blue-600 mb-1';
+                    hisLabel.textContent = 'His Thoughts 💙';
+                    const hisText = document.createElement('p');
+                    hisText.textContent = entry.hisNotes || '';
+                    his.appendChild(hisLabel);
+                    his.appendChild(hisText);
+                    const her = document.createElement('div');
+                    const herLabel = document.createElement('h4');
+                    herLabel.className = 'font-semibold text-pink-600 mb-1';
+                    herLabel.textContent = 'Her Thoughts 💖';
+                    const herText = document.createElement('p');
+                    herText.textContent = entry.herNotes || '';
+                    her.appendChild(herLabel);
+                    her.appendChild(herText);
+                    notes.appendChild(his);
+                    notes.appendChild(her);
+                    entryDiv.appendChild(notes);
+                    template.appendChild(entryDiv);
+                });
+
+                template.classList.remove('hidden');
+
+                const options = {
+                    margin: 1,
+                    filename: `CoupleCrafts_Scrapbook_${new Date().toISOString().slice(0,10)}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                };
+
+                await html2pdf().set(options).from(template).save();
+
+                template.classList.add('hidden');
+                template.innerHTML = '';
+
+                const now = new Date().toISOString();
+                await window.coupleCraftsDB.saveSetting('lastScrapbookExportDate', now);
+                this.lastScrapbookExportDate = now;
+            } catch (error) {
+                console.error('Scrapbook export failed:', error);
+                alert('Failed to export scrapbook.');
             }
         },
 
