@@ -2,7 +2,7 @@
   "name": "CoupleCrafts",
   "short_name": "CoupleCrafts",
   "description": "AI-powered at-home activity prompts for couples",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#1f2937",
   "theme_color": "#3b82f6",
