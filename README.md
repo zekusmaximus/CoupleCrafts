@@ -72,6 +72,11 @@ All data (activities, history, photos, settings) is stored locally via IndexedDB
 - Uses Tailwind via CDN and Alpine.js.
 - Service worker (`sw.js`) enables offline use after first load.
 
+## Deployment
+- A `.nojekyll` file is included so GitHub Pages serves files without Jekyll processing.
+- The GitHub Actions workflow at `.github/workflows/deploy.yml` publishes the site whenever changes are pushed to `main`.
+  - Enable GitHub Pages in the repository settings and select "GitHub Actions" as the source.
+
 ## Troubleshooting
 - Blank activities list: ensure `data/fallback-activities.json` is served (requires local server due to fetch).
 - AI failures: use "Save & Test" in Settings to verify keys; watch for 401/403 (bad key) or 429 (rate limit).
