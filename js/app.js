@@ -1,13 +1,7 @@
 // Main Alpine.js Application for CoupleCrafts
-function app() {
+
+function appStore() {
     return {
-        // App state
-        activeTab: 'activities',
-        showSettings: false,
-        showAddEntry: false,
-        showExportOptions: false,
-        loading: false,
-        
         // Settings
         aiEnabled: false,
         aiProvider: 'gemini',
@@ -27,7 +21,7 @@ function app() {
             'mindful connection',
             'playful games'
         ],
-        
+
         // Current activity
         currentActivity: {
             title: 'Welcome to CoupleCrafts!',
@@ -38,13 +32,13 @@ function app() {
             isFavorite: false,
             rating: 0
         },
-        
+
         // Activities data
-        activities: [], // filtered list for display
-        allActivities: [], // unfiltered master list
+        activities: [],
+        allActivities: [],
         fallbackActivities: [],
         currentActivityIndex: 0,
-        
+
         // History data
         activityHistory: [],
         newEntry: {
@@ -54,35 +48,31 @@ function app() {
             photo: null,
             photoPreview: null
         },
-        
+
         // Photo modal
         photoModal: {
             show: false,
             src: ''
         },
 
+        // Export
         lastScrapbookExportDate: null,
+        entriesToExport: [],
 
-        // Initialize the app
+        // Shared UI state
+        showAddEntry: false,
+        showExportOptions: false,
+        loading: false,
+
+        // Initialize the store
         async init() {
             try {
-                // Initialize database
                 await window.coupleCraftsDB.init();
-                console.log('Database initialized');
-                
-                // Load settings
                 await this.loadSettings();
-                
-                // Load fallback activities
                 await this.loadFallbackActivities();
-                
-                // Load saved activities and history
                 await this.loadActivities();
                 await this.loadHistory();
-
                 this.lastScrapbookExportDate = await window.coupleCraftsDB.getSetting('lastScrapbookExportDate', null);
-                
-                // Set initial activity from filtered list or fallback
                 if (this.activities.length > 0) {
                     this.currentActivity = this.activities[0];
                     this.currentActivityIndex = 0;
@@ -90,11 +80,8 @@ function app() {
                     this.currentActivity = this.fallbackActivities[0];
                     this.currentActivityIndex = 0;
                 }
-                
-                console.log('App initialized successfully');
             } catch (error) {
                 console.error('Failed to initialize app:', error);
-                // Continue with fallback data
                 await this.loadFallbackActivities();
                 if (this.fallbackActivities.length > 0) {
                     this.currentActivity = this.fallbackActivities[0];
@@ -123,7 +110,6 @@ function app() {
             }
         },
 
-        // Explicit save + test action to avoid testing on every keystroke
         async saveSettingsAndTest() {
             try {
                 await this.saveSettings();
@@ -151,7 +137,6 @@ function app() {
                 console.log(`Loaded ${this.fallbackActivities.length} fallback activities`);
             } catch (error) {
                 console.error('Failed to load fallback activities:', error);
-                // Create minimal fallback if file fails to load
                 this.fallbackActivities = [{
                     title: 'Romantic Conversation',
                     description: 'Share your dreams and aspirations with each other.',
@@ -185,7 +170,6 @@ function app() {
                 const matchesFavorite = !this.showFavoritesOnly || !!a.isFavorite;
                 return matchesCategory && matchesFavorite;
             });
-            // Reset index and current activity if needed
             if (this.activities.length > 0) {
                 this.currentActivityIndex = 0;
                 this.currentActivity = this.activities[0];
@@ -198,56 +182,23 @@ function app() {
 
         async getNewActivity() {
             if (this.aiEnabled && this.apiKey) {
-                await this.generateAIActivity();
-            } else {
-                this.getRandomFallbackActivity();
-            }
-        },
-
-        async generateAIActivity() {
-            this.loading = true;
-            try {
-                const activity = await window.aiService.generateActivity(
-                    this.aiProvider, 
-                    this.apiKey
-                );
-                
-                // Save to database
-                await window.coupleCraftsDB.saveActivity(activity);
-                
-                // Update current activity
-                this.currentActivity = activity;
-                
-                // Add to activities list
-                this.allActivities.unshift(activity);
-                this.applyFilters();
-                
-                console.log('Generated new AI activity:', activity.title);
-            } catch (error) {
-                console.error('AI generation failed:', error);
-                const msg = (error && error.message) ? error.message : '';
-                if (/401|403/i.test(msg)) {
-                    alert('AI request failed: Invalid API key or insufficient permissions. Check your key and provider.');
-                } else if (/429|rate|quota/i.test(msg)) {
-                    alert('AI request failed: Rate limit or quota exceeded. Please try again later.');
-                } else {
-                    alert('Failed to generate AI activity. Using fallback activity instead.');
+                try {
+                    this.loading = true;
+                    const activity = await window.aiService.generateActivity(this.aiProvider, this.apiKey, this.currentCategory);
+                    this.currentActivity = activity;
+                    this.activities.unshift(activity);
+                    await window.coupleCraftsDB.saveActivity(activity);
+                    this.loading = false;
+                } catch (error) {
+                    console.error('AI generation failed:', error);
+                    this.loading = false;
+                    alert(error.message || 'Failed to generate activity');
                 }
-                this.getRandomFallbackActivity();
-            } finally {
-                this.loading = false;
+            } else {
+                this.nextActivity();
             }
         },
 
-        getRandomFallbackActivity() {
-            if (this.fallbackActivities.length > 0) {
-                const randomIndex = Math.floor(Math.random() * this.fallbackActivities.length);
-                this.currentActivity = this.fallbackActivities[randomIndex];
-                this.currentActivityIndex = randomIndex;
-            }
-        },
-
-        // Navigation
         nextActivity() {
             if (this.activities.length > 0) {
                 this.currentActivityIndex = (this.currentActivityIndex + 1) % this.activities.length;
@@ -257,17 +208,15 @@ function app() {
 
         previousActivity() {
             if (this.activities.length > 0) {
-                this.currentActivityIndex = this.currentActivityIndex > 0 
-                    ? this.currentActivityIndex - 1 
+                this.currentActivityIndex = this.currentActivityIndex > 0
+                    ? this.currentActivityIndex - 1
                     : this.activities.length - 1;
                 this.currentActivity = this.activities[this.currentActivityIndex];
             }
         },
 
-        // Activity interactions
         async toggleFavorite() {
             this.currentActivity.isFavorite = !this.currentActivity.isFavorite;
-            
             if (this.currentActivity.id) {
                 try {
                     await window.coupleCraftsDB.updateActivity(this.currentActivity.id, {
@@ -283,7 +232,6 @@ function app() {
             const rating = prompt('Rate this activity (1-5 stars):');
             if (rating && rating >= 1 && rating <= 5) {
                 this.currentActivity.rating = parseInt(rating);
-                
                 if (this.currentActivity.id) {
                     try {
                         await window.coupleCraftsDB.updateActivity(this.currentActivity.id, {
@@ -297,8 +245,7 @@ function app() {
         },
 
         startActivity() {
-            // Switch to history tab and prepare for entry
-            this.activeTab = 'history';
+            this.$root.activeTab = 'history';
             this.showAddEntry = true;
             this.newEntry.title = this.currentActivity.title;
         },
@@ -307,8 +254,6 @@ function app() {
         async loadHistory() {
             try {
                 this.activityHistory = await window.coupleCraftsDB.getActivityHistory();
-                
-                // Load photos for each history entry
                 for (let entry of this.activityHistory) {
                     if (entry.photoId) {
                         const photo = await window.coupleCraftsDB.getPhoto(entry.photoId);
@@ -317,7 +262,6 @@ function app() {
                         }
                     }
                 }
-                
                 console.log(`Loaded ${this.activityHistory.length} history entries`);
             } catch (error) {
                 console.error('Failed to load history:', error);
@@ -326,11 +270,11 @@ function app() {
             }
         },
 
-    async handlePhotoUpload(event) {
+        async handlePhotoUpload(event) {
             const file = event.target.files[0];
             if (file && file.type.startsWith('image/')) {
-        this.newEntry.photo = file;
-        this.newEntry.photoPreview = URL.createObjectURL(file);
+                this.newEntry.photo = file;
+                this.newEntry.photoPreview = URL.createObjectURL(file);
             }
         },
 
@@ -339,7 +283,6 @@ function app() {
                 alert('Please enter an activity title');
                 return;
             }
-
             try {
                 const entry = {
                     title: this.newEntry.title,
@@ -348,22 +291,14 @@ function app() {
                     activityId: this.currentActivity.id || null,
                     date: new Date().toISOString()
                 };
-
-                // Save entry to database
                 const entryId = await window.coupleCraftsDB.saveActivityHistory(entry);
                 entry.id = entryId;
-
-                // Save photo if provided
                 if (this.newEntry.photo) {
                     const photoId = await window.coupleCraftsDB.savePhoto(this.newEntry.photo, entryId);
                     entry.photoId = photoId;
                     entry.photo = URL.createObjectURL(this.newEntry.photo);
                 }
-
-                // Add to history list
                 this.activityHistory.unshift(entry);
-
-                // Reset form
                 this.newEntry = {
                     title: '',
                     hisNotes: '',
@@ -372,8 +307,6 @@ function app() {
                     photoPreview: null
                 };
                 this.showAddEntry = false;
-
-                console.log('Activity entry saved successfully');
                 alert('Activity saved successfully!');
             } catch (error) {
                 console.error('Failed to save entry:', error);
@@ -392,68 +325,13 @@ function app() {
                         alert('This is your first scrapbook!');
                     }
                 }
-
                 if (entries.length === 0) {
                     alert('No entries to export.');
                     return;
                 }
-
-                const template = document.getElementById('scrapbook-template');
-                template.innerHTML = '';
-
-                const cover = document.createElement('div');
-                cover.className = 'min-h-screen flex flex-col justify-center items-center text-center p-8 bg-gradient-to-r from-pink-100 to-blue-100';
-                const title = document.createElement('h1');
-                title.className = 'text-3xl font-bold mb-4 text-pink-600';
-                title.textContent = 'Our CoupleCrafts Memories';
-                const dateEl = document.createElement('p');
-                dateEl.className = 'text-lg text-gray-700';
-                dateEl.textContent = new Date().toLocaleDateString();
-                cover.appendChild(title);
-                cover.appendChild(dateEl);
-                template.appendChild(cover);
-
-                entries.forEach(entry => {
-                    const entryDiv = document.createElement('div');
-                    entryDiv.className = 'my-4 p-6 bg-gradient-to-r from-pink-100 to-blue-100 border-2 border-pink-300 rounded-lg shadow-md';
-                    const header = document.createElement('div');
-                    header.className = 'text-center font-bold mb-2';
-                    header.textContent = `${entry.title} - ${this.formatDate(entry.date)}`;
-                    entryDiv.appendChild(header);
-
-                    if (entry.photo) {
-                        const img = document.createElement('img');
-                        img.src = entry.photo;
-                        img.className = 'max-w-md h-auto mx-auto my-4 rounded';
-                        entryDiv.appendChild(img);
-                    }
-
-                    const notes = document.createElement('div');
-                    notes.className = 'grid grid-cols-2 gap-4 text-sm';
-                    const his = document.createElement('div');
-                    const hisLabel = document.createElement('h4');
-                    hisLabel.className = 'font-semibold text-blue-600 mb-1';
-                    hisLabel.textContent = 'His Thoughts 💙';
-                    const hisText = document.createElement('p');
-                    hisText.textContent = entry.hisNotes || '';
-                    his.appendChild(hisLabel);
-                    his.appendChild(hisText);
-                    const her = document.createElement('div');
-                    const herLabel = document.createElement('h4');
-                    herLabel.className = 'font-semibold text-pink-600 mb-1';
-                    herLabel.textContent = 'Her Thoughts 💖';
-                    const herText = document.createElement('p');
-                    herText.textContent = entry.herNotes || '';
-                    her.appendChild(herLabel);
-                    her.appendChild(herText);
-                    notes.appendChild(his);
-                    notes.appendChild(her);
-                    entryDiv.appendChild(notes);
-                    template.appendChild(entryDiv);
-                });
-
-                template.classList.remove('hidden');
-
+                this.entriesToExport = entries;
+                const renderArea = document.getElementById('scrapbook-render-area');
+                renderArea.classList.remove('hidden');
                 const options = {
                     margin: 1,
                     filename: `CoupleCrafts_Scrapbook_${new Date().toISOString().slice(0,10)}.pdf`,
@@ -461,12 +339,9 @@ function app() {
                     html2canvas: { scale: 2 },
                     jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
                 };
-
-                await html2pdf().set(options).from(template).save();
-
-                template.classList.add('hidden');
-                template.innerHTML = '';
-
+                await html2pdf().set(options).from(renderArea).save();
+                renderArea.classList.add('hidden');
+                this.entriesToExport = [];
                 const now = new Date().toISOString();
                 await window.coupleCraftsDB.saveSetting('lastScrapbookExportDate', now);
                 this.lastScrapbookExportDate = now;
@@ -476,68 +351,87 @@ function app() {
             }
         },
 
-        // Photo modal
         showPhotoModal(src) {
             this.photoModal.src = src;
             this.photoModal.show = true;
         },
 
-        // Utility functions
         formatDate(dateString) {
             const date = new Date(dateString);
-            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        },
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+    };
+}
 
-        // Watch for settings changes
-        $watch: {
-            aiEnabled() {
-                this.saveSettings();
-            },
-            aiProvider() {
-                this.saveSettings();
-            },
-            apiKey() {
-                this.saveSettings();
+function app() {
+    return {
+        activeTab: 'activities',
+        showSettings: false,
+        init() {
+            this.$store.cc.init();
+        }
+    };
+}
+
+function settingsManager() {
+    return {
+        get aiEnabled() { return this.$store.cc.aiEnabled; },
+        set aiEnabled(v) { this.$store.cc.aiEnabled = v; },
+        get aiProvider() { return this.$store.cc.aiProvider; },
+        set aiProvider(v) { this.$store.cc.aiProvider = v; },
+        get apiKey() { return this.$store.cc.apiKey; },
+        set apiKey(v) { this.$store.cc.apiKey = v; },
+        saveSettingsAndTest() { this.$store.cc.saveSettingsAndTest(); }
+    };
+}
+
+function activityViewer() {
+    return {
+        touchStartX: 0,
+        get categories() { return this.$store.cc.categories; },
+        get currentCategory() { return this.$store.cc.currentCategory; },
+        set currentCategory(v) { this.$store.cc.currentCategory = v; },
+        get showFavoritesOnly() { return this.$store.cc.showFavoritesOnly; },
+        set showFavoritesOnly(v) { this.$store.cc.showFavoritesOnly = v; },
+        get currentActivity() { return this.$store.cc.currentActivity; },
+        filterActivities() { this.$store.cc.filterActivities(); },
+        toggleFavorite() { this.$store.cc.toggleFavorite(); },
+        getNewActivity() { this.$store.cc.getNewActivity(); },
+        startActivity() { this.$store.cc.startActivity(); },
+        rateActivity() { this.$store.cc.rateActivity(); },
+        nextActivity() { this.$store.cc.nextActivity(); },
+        previousActivity() { this.$store.cc.previousActivity(); },
+        handleSwipe(endX) {
+            const distance = endX - this.touchStartX;
+            if (Math.abs(distance) > 50) {
+                distance > 0 ? this.previousActivity() : this.nextActivity();
             }
         }
     };
 }
 
-// Initialize app when DOM is loaded
+function historyManager() {
+    return {
+        get activityHistory() { return this.$store.cc.activityHistory; },
+        get newEntry() { return this.$store.cc.newEntry; },
+        saveEntry() { this.$store.cc.saveEntry(); },
+        handlePhotoUpload(e) { this.$store.cc.handlePhotoUpload(e); },
+        formatDate(d) { return this.$store.cc.formatDate(d); },
+        showPhotoModal(src) { this.$store.cc.showPhotoModal(src); }
+    };
+}
+
+function scrapbookExporter() {
+    return {
+        exportAll() { this.$store.cc.exportScrapbook('all'); },
+        exportSince() { this.$store.cc.exportScrapbook('since'); }
+    };
+}
+
+document.addEventListener('alpine:init', () => {
+    Alpine.store('cc', appStore());
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('CoupleCrafts PWA loaded');
 });
-
-// Handle touch gestures for swipe navigation
-let touchStartX = 0;
-let touchEndX = 0;
-
-document.addEventListener('touchstart', e => {
-    touchStartX = e.changedTouches[0].screenX;
-});
-
-document.addEventListener('touchend', e => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-});
-
-function handleSwipe() {
-    const swipeThreshold = 50;
-    const swipeDistance = touchEndX - touchStartX;
-    
-    if (Math.abs(swipeDistance) > swipeThreshold) {
-        const appElement = document.querySelector('#app');
-        if (appElement && appElement.__x) {
-            const appData = appElement.__x.$data;
-            
-            if (appData.activeTab === 'activities') {
-                if (swipeDistance > 0) {
-                    appData.previousActivity();
-                } else {
-                    appData.nextActivity();
-                }
-            }
-        }
-    }
-}
-
