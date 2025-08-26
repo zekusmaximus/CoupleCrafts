@@ -3,7 +3,7 @@
 AI-powered at-home activity prompts for couples. Works fully client-side as a simple PWA.
 
 ## Features
-- AI-generated activities (Google AI Studio Gemini or Hugging Face Inference)
+- AI-generated activities (Google AI Studio Gemini 1.5 Flash)
 - Curated fallback activities
 - Favorites and ratings
 - Activity history with notes and photo attachments
@@ -22,15 +22,12 @@ AI-powered at-home activity prompts for couples. Works fully client-side as a si
 
 2. In the app, open Settings (gear icon):
    - Toggle "AI Generation" ON to enable API use.
-   - Pick a provider: "Google AI Studio (Gemini)" or "Hugging Face (Mistral-7B)".
-   - Paste your API key.
+   - Paste your Google AI Studio API key.
    - Click "Save & Test" to validate the connection.
 
 ## API Keys
 - Google AI Studio (Gemini): create a key at https://aistudio.google.com/app/apikey
-  - Model endpoint used: `gemini-pro:generateContent` (v1beta).
-- Hugging Face Inference: create a key at https://huggingface.co/settings/tokens
-  - Model used: `mistralai/Mistral-7B-Instruct-v0.1`.
+  - Model endpoint used: `gemini-1.5-flash-latest:generateContent` (v1beta).
 
 Notes:
 - Keys are stored in IndexedDB locally in your browser.
