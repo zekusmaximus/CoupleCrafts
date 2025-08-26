@@ -94,6 +94,10 @@ function appStore() {
             try {
                 this.aiEnabled = await window.coupleCraftsDB.getSetting('aiEnabled', false);
                 this.aiProvider = await window.coupleCraftsDB.getSetting('aiProvider', 'gemini');
+                if (!window.aiService.getProviderInfo(this.aiProvider)) {
+                    this.aiProvider = 'gemini';
+                    await window.coupleCraftsDB.saveSetting('aiProvider', this.aiProvider);
+                }
                 this.apiKey = await window.coupleCraftsDB.getSetting('apiKey', '');
             } catch (error) {
                 console.error('Failed to load settings:', error);

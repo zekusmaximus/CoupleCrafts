@@ -3,13 +3,8 @@ class AIService {
     constructor() {
         this.providers = {
             gemini: {
-                name: 'Google AI Studio (Gemini)',
-                endpoint: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent',
-                requiresKey: true
-            },
-            huggingface: {
-                name: 'Hugging Face (Mistral-7B)',
-                endpoint: 'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1',
+                name: 'Google AI Studio (Gemini 1.5 Flash)',
+                endpoint: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent',
                 requiresKey: true
             }
         };
@@ -23,9 +18,6 @@ class AIService {
             switch (provider) {
                 case 'gemini':
                     response = await this.callGemini(apiKey, prompt);
-                    break;
-                case 'huggingface':
-                    response = await this.callHuggingFace(apiKey, prompt);
                     break;
                 default:
                     throw new Error('Unknown AI provider');
@@ -114,42 +106,6 @@ Make it creative, romantic, and themed around ${selectedTheme}. Ensure all instr
         }
 
         return data.candidates[0].content.parts[0].text;
-    }
-
-    async callHuggingFace(apiKey, prompt) {
-        const response = await fetch(this.providers.huggingface.endpoint, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                inputs: prompt,
-                parameters: {
-                    max_new_tokens: 1024,
-                    temperature: 0.7,
-                    top_p: 0.95,
-                    do_sample: true,
-                    return_full_text: false
-                }
-            })
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            let friendly = `Hugging Face API error: ${response.status}`;
-            if (response.status === 401 || response.status === 403) friendly += ' (unauthorized)';
-            if (response.status === 429) friendly += ' (rate limit)';
-            throw new Error(`${friendly} - ${errorText}`);
-        }
-
-        const data = await response.json();
-        
-    if (!data || !data[0] || !data[0].generated_text) {
-            throw new Error('Invalid response from Hugging Face API');
-        }
-
-        return data[0].generated_text;
     }
 
     parseActivityResponse(response) {
@@ -249,9 +205,6 @@ Make it creative, romantic, and themed around ${selectedTheme}. Ensure all instr
             switch (provider) {
                 case 'gemini':
                     await this.callGemini(apiKey, testPrompt);
-                    break;
-                case 'huggingface':
-                    await this.callHuggingFace(apiKey, testPrompt);
                     break;
                 default:
                     throw new Error('Unknown provider');

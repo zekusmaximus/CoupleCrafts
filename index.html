@@ -71,10 +71,9 @@
                     <div x-show="aiEnabled" class="space-y-2">
                         <label class="text-sm">AI Provider</label>
                         <select x-model="aiProvider" class="w-full p-2 rounded bg-gray-700 text-white">
-                            <option value="gemini">Google AI Studio (Gemini)</option>
-                            <option value="huggingface">Hugging Face (Mistral-7B)</option>
+                            <option value="gemini">Google AI Studio (Gemini 1.5 Flash)</option>
                         </select>
-                        <input x-model="apiKey" type="password" placeholder="API Key" 
+                        <input x-model="apiKey" type="password" placeholder="API Key"
                                class="w-full p-2 rounded bg-gray-700 text-white placeholder-gray-400">
                         <button @click="saveSettingsAndTest()" class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">Save & Test</button>
                     </div>
